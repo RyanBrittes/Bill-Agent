@@ -7,22 +7,32 @@ from dotenv import load_dotenv
 load_dotenv()
 
 #Criação da conexão com o banco de dados
-conn = psycopg2.connect(
-    host="localhost",
-    port="5432",
-    database= os.getenv("db_name"),
-    user= os.getenv("db_user"),
-    password= os.getenv("db_pass")
-)
+class database:
+    def __init__(self):
+        self.conn = psycopg2.connect(
+            host="localhost",
+            port="5432",
+            database= os.getenv("db_name"),
+            user= os.getenv("db_user"),
+            password= os.getenv("db_pass")
+        )
+        #Criação do cursor
+        self.cur = self.conn.cursor()
 
-#Criação do cursor
-cur = conn.cursor()
+    def consultar_cliente_debito(self):
+        self.cur.execute("SELECT Cl_ID FROM TB_FATURA WHERE DC_Situacao = 'Não pago' AND DC_Vencimento < CURRENT_DATE;")
+        return self.cur.fetchall()
+    
+    def consultar_email_cliente(self, x: int):
+        self.cur.execute(f"SELECT Cl_Email FROM TB_Cliente WHERE Cl_ID = {x};")
+        cliente_Email = self.cur.fetchone()
+        return cliente_Email[0]
+    
+    def consultar_nome_cliente(self, x: int):
+        self.cur.execute(f"SELECT Cl_Nome FROM TB_Cliente WHERE Cl_ID = {x};")
+        cliente_Nome = self.cur.fetchone()
+        return cliente_Nome[0]
 
-#Consulta no Banco de Dados
-cur.execute("SELECT Cl_Email FROM TB_Cliente WHERE Cl_ID = 1;")
-
-DB_email = cur.fetchone()[0]
-print(DB_email)
-
-cur.close()
-conn.close()
+    def close(self):
+        self.cur.close()
+        self.conn.close()

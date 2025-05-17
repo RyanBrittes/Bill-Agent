@@ -37,7 +37,7 @@ def enviar_email():
     print('Email enviado')
 
 #Scheduller
-schedule.every().day.at("16:06").do(enviar_email)
+schedule.every().day.at("10:00").do(enviar_email)
 
 print("Agendador funcionando...")
 
