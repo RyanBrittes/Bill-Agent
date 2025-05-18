@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 #Criação da conexão com o banco de dados
-class database:
+class Database:
     def __init__(self):
         self.conn = psycopg2.connect(
             host="localhost",
@@ -22,17 +22,12 @@ class database:
     def consultar_cliente_debito(self):
         self.cur.execute("SELECT Cl_ID FROM TB_FATURA WHERE DC_Situacao = 'Não pago' AND DC_Vencimento < CURRENT_DATE;")
         return self.cur.fetchall()
+   
+    def consultar_informacoes_clientes(self):
+        self.cur.execute("SELECT Cl_Nome, Cl_Email, DC_Nome, DC_Vencimento FROM TB_Cliente A JOIN TB_Fatura B ON A.Cl_ID = B.Cl_ID WHERE DC_Vencimento < CURRENT_DATE AND DC_Situacao = 'Não pago';")
+        return self.cur.fetchall()
     
-    def consultar_email_cliente(self, x: int):
-        self.cur.execute(f"SELECT Cl_Email FROM TB_Cliente WHERE Cl_ID = {x};")
-        cliente_Email = self.cur.fetchone()
-        return cliente_Email[0]
-    
-    def consultar_nome_cliente(self, x: int):
-        self.cur.execute(f"SELECT Cl_Nome FROM TB_Cliente WHERE Cl_ID = {x};")
-        cliente_Nome = self.cur.fetchone()
-        return cliente_Nome[0]
-
     def close(self):
         self.cur.close()
         self.conn.close()
+        
