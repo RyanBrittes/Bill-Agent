@@ -6,9 +6,9 @@ load_dotenv()
 
 class SendWP:
     def __init__(self):
-        self.key = os.getenv('apikey')
         self.url = os.getenv('linkurl')
-        self.headers = {"apikey": "key123","Content-Type": "application/json"}
+        self.key = os.getenv('AUTHENTICATION_API_KEY')
+        self.headers = {"apikey": f"{self.key}","Content-Type": "application/json"}
 
     def enviar(self,numero_cliente: str, nome_cliente: str, nome_fatura: str, vencimento: str):
         payload = {
