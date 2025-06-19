@@ -48,6 +48,7 @@ services:
       - "${PGADMIN_PORT_PGA1}:80"
     links:
       - postgres
+    restart: always
 
 #Banco de dados Redis
   redis:
@@ -65,7 +66,7 @@ services:
 #Framework EvolutionAPI 
   evolution-api:
       container_name: evolutionAPI
-      image: atendai/evolution-api:v2.1.1
+      image: atendai/evolution-api:latest
       restart: always
       networks:
         - evolution-net
